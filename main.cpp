@@ -56,5 +56,6 @@ int getMode(int argc, char* argv[]){
 int main(int argc, char* argv[])
 {
     sudoku g(getMode(argc, argv));
+    g.printSudoku();
     return 0;
 }

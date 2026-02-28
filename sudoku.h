@@ -5,23 +5,25 @@ class sudoku
 {
 
 public:
-sudoku(int empty, int seed = 0):empty_tiles(empty)
+sudoku(int empty, unsigned seed = 0):empty_tiles(empty),mt(seed),seed(seed)
 {
-    makeSudoku(seed);
 };
-void makeSudoku(int seed){};
-void printSudoku(){};
-void play(){};
+void makeSudoku();
+void printSudoku();
+void play();
 
 // ~sudoku();
 
 private:
-bool checkBox(int num, int row_num, int col_num){};
-bool checkVertical(int num, int row_num){};
-bool checkHorizontal(int num, int col_num){};
+bool checkBox(int num, int row_num, int col_num);
+bool checkHorizontal(int num, size_t row_num);
+bool checkVertical(int num, size_t col_num);
+int rand();
 std::vector<std::vector<int>> masterList;
 std::vector<std::vector<int*>> vertical;
 std::vector<std::vector<int*>> box;
 int empty_tiles;
+ std::mt19937 mt;
+ unsigned seed;
 };
 
