@@ -5,9 +5,7 @@ class sudoku
 {
 
 public:
-sudoku(int empty, unsigned seed = 0):empty_tiles(empty),mt(seed),seed(seed)
-{
-};
+sudoku(int empty, unsigned seed = 0);
 void makeSudoku();
 void printSudoku();
 void play();
@@ -24,6 +22,5 @@ std::vector<std::vector<int*>> vertical;
 std::vector<std::vector<int*>> box;
 int empty_tiles;
  std::mt19937 mt;
- unsigned seed;
 };
 

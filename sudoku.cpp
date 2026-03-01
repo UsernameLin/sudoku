@@ -1,16 +1,11 @@
 #include "sudoku.h"
+#include <queue>
 using namespace std;
 
 int sudoku::rand()
 {
-    if(seed == 0)
-        {
-        mt = mt19937{static_cast<std::mt19937::result_type>(
-        std::chrono::steady_clock::now().time_since_epoch().count())};
-        }
     std::uniform_int_distribution<int> die{1, 9};
-    int value{die(mt)};
-    return value;
+    return die(mt);
 };
 
 bool sudoku::checkHorizontal(int num, size_t row_num)
@@ -37,11 +32,11 @@ bool sudoku::checkVertical(int num, size_t col_num)
 }
 bool sudoku::checkBox(int num, int row_num, int col_num)
 {
-    row_num = abs(row_num - 1)/ 3 ;
-    col_num = abs(col_num - 1)/ 3 ;
-    for(int i = row_num * 3; i < 3; ++i)
+    int new_row_num = row_num/ 3 ;
+    int new_col_num = col_num/ 3 ;
+    for(int i = new_row_num * 3; i < (new_row_num * 3) + 3; ++i)
     {
-        for(int j = col_num * 3; j< 3; ++j)
+        for(int j = new_col_num * 3; j< (new_col_num * 3)+3; ++j)
         {
             if(masterList[static_cast<size_t>(i)][static_cast<size_t>(j)] == num)
             {
@@ -53,19 +48,39 @@ bool sudoku::checkBox(int num, int row_num, int col_num)
 }
 void sudoku::makeSudoku()
 {
-    int numbers[] = {9,9,9,9,9,9,9,9,9};
+    queue<int> q;
+            q.push(1);
+            q.push(2);
+            q.push(3);
+            q.push(4);
+            q.push(5);
+            q.push(6);
+            q.push(7);
+            q.push(8);
+            q.push(9);
     for(size_t i = 0; i<9; ++i)
     {
         for(size_t j = 0; j<9; ++j)
         {
+            queue<int> c = q;
             int num = rand();
-            while(numbers[num-1] == 0){num = rand();}
-            while(checkVertical(num,i) || checkHorizontal(num,j)||checkBox(num,static_cast<int>(i),static_cast<int>(j)))
+            while(checkVertical(num,j) || checkHorizontal(num,i)||checkBox(num,static_cast<int>(i),static_cast<int>(j)))
             {
-                num = rand();
+                if(c.empty())
+                {
+                    printSudoku();
+                    masterList[i].assign(9,-1);
+                    c = q;
+                    j = 0;
+                    num = rand();
+                }
+                else
+                {
+                num = c.front();
+                c.pop();
+               }
             }
             masterList[i][j] = num;
-            --numbers[num-1];
         }
     }
 
@@ -81,7 +96,7 @@ void sudoku::printSudoku()
         cout << '\n';
     }
 }
-sudoku::sudoku(int empty, unsigned seed = 0):empty_tiles(empty),mt(seed),seed(seed)
+sudoku::sudoku(int empty, unsigned seed):empty_tiles(empty),mt(seed == 0 ? static_cast<unsigned>(std::chrono::steady_clock::now().time_since_epoch().count()): seed)
 {
     masterList.resize(9);
     for(int i = 0; i < 9; ++i)
@@ -90,3 +105,20 @@ sudoku::sudoku(int empty, unsigned seed = 0):empty_tiles(empty),mt(seed),seed(se
     }
     makeSudoku();
 };
+void sudoku::play(){
+    
+    while(true)
+    {
+        int num;
+        cin >> num;
+        while(num < 0 || num > 9)
+        {
+            cin >> num;
+        }
+        if(empty_tiles == 0)
+        {
+            return;
+        }
+
+    }
+}
